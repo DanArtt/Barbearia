@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "seed": "tsx prisma/seed.ts"
+    "seed": "tsx prisma/seed.ts",
+    "prepare": "husky"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -30,6 +31,8 @@
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.2.30",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.2",
     "postcss": "^8",
     "prettier-plugin-tailwindcss": "^0.6.13",
     "prisma": "^6.11.1",
