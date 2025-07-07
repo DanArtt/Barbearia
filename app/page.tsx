@@ -1,6 +1,4 @@
 import Header from "@/components/header"
-import { Avatar, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -8,6 +6,8 @@ import { SearchIcon } from "lucide-react"
 import Image from "next/image"
 import { db } from "./_lib/prisma"
 import BarbershopItem from "@/components/barbershop-item"
+import { quickSearchOptions } from "./_constants/search"
+import BookingItem from "@/components/booking-item"
 
 const Home = async () => {
   const barbershops = await db.barbershop.findMany({})
@@ -34,55 +34,17 @@ const Home = async () => {
         </div>
         {/* Busca Rápida */}
         <div className="mt-6 flex gap-3 overflow-x-auto [&::-webkit-scrollbar]:hidden">
-          <Button className="gap-2" variant="secondary">
-            <Image
-              src="/cabelo.svg"
-              alt="logo Tesoura"
-              height={16}
-              width={16}
-            />
-            Cabelo
-          </Button>
-          <Button className="gap-2" variant="secondary">
-            <Image src="/barba.svg" alt="logo Barba" height={16} width={16} />
-            Barba
-          </Button>
-          <Button className="gap-2" variant="secondary">
-            <Image
-              src="/Acabamento.svg"
-              alt="logo Acabamento"
-              height={16}
-              width={16}
-            />
-            Acabamento
-          </Button>
-          <Button className="gap-2" variant="secondary">
-            <Image
-              src="/sobrancelha.svg"
-              alt="logo Sobrancelha"
-              height={16}
-              width={16}
-            />
-            Sobrancelha
-          </Button>
-          <Button className="gap-2" variant="secondary">
-            <Image
-              src="/massagem.svg"
-              alt="logo Massagem"
-              height={16}
-              width={16}
-            />
-            Massagem
-          </Button>
-          <Button className="gap-2" variant="secondary">
-            <Image
-              src="/hidratacao.svg"
-              alt="logo hidratação "
-              height={16}
-              width={16}
-            />
-            Hidratação
-          </Button>
+          {quickSearchOptions.map((option) => (
+            <Button className="gap-2" variant="secondary" key={option.title}>
+              <Image
+                src={option.imageURL}
+                alt={option.title}
+                height={16}
+                width={16}
+              />
+              {option.title}
+            </Button>
+          ))}
         </div>
 
         {/* Banner 01 */}
@@ -94,34 +56,8 @@ const Home = async () => {
             className="rounded-xl object-cover"
           />
         </div>
-        {/* Agendamentos */}
-        <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
-          Agendamentos
-        </h2>
-        <Card>
-          <CardContent className="flex justify-between p-0">
-            {/* Conteudo da Esquerda do Card */}
-            <div className="flex flex-col gap-2 px-5 py-5">
-              <Badge className="w-fit">Confirmado</Badge>
-              <h3 className="text-lg font-semibold">Corte de Cabelo</h3>
-              <div className="item-center flex gap-2">
-                <Avatar className="h-6 w-6">
-                  <AvatarImage
-                    src="https://utfs.io/f/45331760-899c-4b4b-910e-e00babb6ed81-16q.png"
-                    alt="Logo da Barbearia"
-                  />
-                </Avatar>
-                <p className="text-sm text-gray-400">Barbearia Vintage</p>
-              </div>
-            </div>
-            {/* Conteudo da Direita do Card */}
-            <div className="flex flex-col items-center justify-center border-l-2 border-solid px-5">
-              <p className="text-sm">Julho</p>
-              <p className="text-2xl">08</p>
-              <p className="text-sm">18:30</p>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Agendamento */}
+        <BookingItem />
         {/* Visualização das Barbearias Recomendadas */}
         <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
           Recomendados
