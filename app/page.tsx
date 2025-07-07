@@ -53,7 +53,7 @@ const Home = async () => {
                     alt="Logo da Barbearia"
                   />
                 </Avatar>
-                <p className="text-sm">Barbearia Vintage</p>
+                <p className="text-sm text-gray-400">Barbearia Vintage</p>
               </div>
             </div>
             {/* Conteudo da Direita do Card */}
