@@ -36,6 +36,34 @@
   }
 }
 
+@font-face {
+  font-family: "Nunito";
+  src: url("/fonts/Nunito-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Nunito";
+  src: url("/fonts/Nunito-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Nunito";
+  src: url("/fonts/Nunito-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Nunito";
+  src: url("/fonts/Nunito-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
 @layer base {
   * {
     @apply border-border antialiased;
@@ -44,6 +72,6 @@
     @apply h-full;
   }
   body {
-    @apply h-full bg-background text-foreground;
+    @apply font-nunito h-full bg-background text-foreground;
   }
 }
