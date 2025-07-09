@@ -1,4 +1,5 @@
 import { db } from "@/app/_lib/prisma"
+import PhoneItem from "@/components/phone-item"
 import ServiceItem from "@/components/service-item"
 import { Button } from "@/components/ui/button"
 import { ChevronLeftIcon, MapPinIcon, MenuIcon, StarIcon } from "lucide-react"
@@ -62,29 +63,37 @@ const BarbershopPage = async ({ params }: BarbershopPageProps) => {
       {/* TEXTO ABAIXO DA IMAGEM */}
       <div className="border-b border-solid p-5">
         <h1 className="mb-3 text-xl font-bold">{barbershop?.name}</h1>
+
         <div className="mb-2 flex items-center gap-2">
           <MapPinIcon className="fill-primary text-secondary" size={18} />
           <p className="text-sm">{barbershop?.address}</p>
         </div>
         <div className="flex items-center gap-2">
           <StarIcon className="fill-primary text-primary" size={18} />
-          <p className="text-sm">5,0 (456 Avaliações).</p>
+          <p className="text-sm">5,0 (806 Avaliações).</p>
         </div>
       </div>
-      {/* DESCRIÇÃO DAS BARBEARIAS*/}
+      {/* DESCRIÇÃO DA BARBEARIA*/}
       <div className="space-y-3 border-b border-solid p-5">
         <h2 className="text-xs font-bold uppercase text-gray-400">Sobre Nós</h2>
         <p className="text-justify text-sm font-light">
           {barbershop?.description}
         </p>
       </div>
-      <div className="space-y-3 p-5">
+      {/* SERVIÇOS DA BARBEARIA */}
+      <div className="space-y-3 border-b border-solid p-5">
         <h2 className="text-xs font-bold uppercase text-gray-400">Serviços</h2>
         <div className="space-y-3">
           {barbershop.services.map((service) => (
             <ServiceItem key={service.id} service={service} />
           ))}
         </div>
+      </div>
+      {/* CONTATO DA BARBEARIA */}
+      <div className="space-y-3 p-5">
+        {barbershop.phones.map((phone) => (
+          <PhoneItem key={phone} phone={phone} />
+        ))}
       </div>
     </div>
   )

@@ -1,6 +1,5 @@
 import Header from "@/components/header"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { SearchIcon } from "lucide-react"
 import Image from "next/image"
@@ -78,16 +77,6 @@ const Home = async () => {
         </div>
       </div>
       {/* Footer */}
-      <footer>
-        <Card>
-          <CardContent className="px-5 py-6">
-            <p className="flex items-center justify-center gap-1 text-center font-light text-gray-400">
-              © 2025 Copyright
-              <span className="font-bold">Daniel de Andrade</span>
-            </p>
-          </CardContent>
-        </Card>
-      </footer>
     </div>
   )
 }
