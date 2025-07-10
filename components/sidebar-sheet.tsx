@@ -1,11 +1,17 @@
 import { Button } from "./ui/button"
-import { CalendarIcon, HomeIcon, LogOutIcon } from "lucide-react"
+import { CalendarIcon, HomeIcon, LogInIcon, LogOutIcon } from "lucide-react"
 import { SheetClose, SheetContent, SheetHeader, SheetTitle } from "./ui/sheet"
 import { quickSearchOptions } from "@/app/_constants/search"
-import { Avatar } from "./ui/avatar"
-import { AvatarImage } from "@radix-ui/react-avatar"
 import Link from "next/link"
 import Image from "next/image"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog"
 
 const SidebarSheet = () => {
   return (
@@ -13,14 +19,39 @@ const SidebarSheet = () => {
       <SheetHeader>
         <SheetTitle className="text-left">Menu</SheetTitle>
       </SheetHeader>
-      <div className="flex items-center gap-3 border-b border-solid py-5">
-        <Avatar>
+      <div className="flex items-center justify-between gap-3 border-b border-solid py-5">
+        <h2 className="font-bold">Olá, faça seu Login!</h2>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button size="icon">
+              <LogInIcon />
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="w-[90%] rounded-xl">
+            <DialogHeader>
+              <DialogTitle>Faça Login na Plataforma</DialogTitle>
+              <DialogDescription>
+                Conecte-se usando sua conta Google
+              </DialogDescription>
+            </DialogHeader>
+            <Button variant="outline" className="gap-1 font-bold">
+              <Image
+                src="/google.svg"
+                alt="Google Icone"
+                width={18}
+                height={18}
+              />
+              Google
+            </Button>
+          </DialogContent>
+        </Dialog>
+        {/* <Avatar>
           <AvatarImage src="https://i.pinimg.com/1200x/80/94/fa/8094fa75e66ff5a0a4d08c3dda0ba5c9.jpg" />
         </Avatar>
         <div>
           <p className="mb-[-2px] font-bold">Daniel de Andrade</p>
           <p className="text-xs text-gray-400">daniel@gmail.com</p>
-        </div>
+        </div> */}
       </div>
       <div className="flex flex-col gap-2 border-b border-solid py-5">
         <SheetClose asChild>
