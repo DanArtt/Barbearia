@@ -14,52 +14,67 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog"
-import { signIn } from "next-auth/react"
+import { signIn, signOut, useSession } from "next-auth/react"
+import { Avatar, AvatarImage } from "@radix-ui/react-avatar"
 
 const SidebarSheet = () => {
+  const { data } = useSession()
   const handleLoginWithGoogleClick = () => signIn("google")
+  const handleLogoutClick = () => signOut()
   return (
     <SheetContent className="overflow-y-auto">
       <SheetHeader>
         <SheetTitle className="text-left">Menu</SheetTitle>
       </SheetHeader>
       <div className="flex items-center justify-between gap-3 border-b border-solid py-5">
-        <h2 className="font-bold">Olá, faça seu Login!</h2>
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button size="icon">
-              <LogInIcon />
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="w-[90%] rounded-xl">
-            <DialogHeader>
-              <DialogTitle>Faça Login na Plataforma</DialogTitle>
-              <DialogDescription>
-                Conecte-se usando sua conta Google
-              </DialogDescription>
-            </DialogHeader>
-            <Button
-              variant="outline"
-              className="gap-1 font-bold"
-              onClick={handleLoginWithGoogleClick}
-            >
-              <Image
-                src="/google.svg"
-                alt="Google Icone"
-                width={18}
-                height={18}
+        {data?.user ? (
+          <div className="flex items-center gap-2">
+            <Avatar>
+              <AvatarImage
+                src={data?.user?.image ?? ""}
+                height={50}
+                width={50}
+                className="rounded-full"
               />
-              Google
-            </Button>
-          </DialogContent>
-        </Dialog>
-        {/* <Avatar>
-          <AvatarImage src="https://i.pinimg.com/1200x/80/94/fa/8094fa75e66ff5a0a4d08c3dda0ba5c9.jpg" />
-        </Avatar>
-        <div>
-          <p className="mb-[-2px] font-bold">Daniel de Andrade</p>
-          <p className="text-xs text-gray-400">daniel@gmail.com</p>
-        </div> */}
+            </Avatar>
+            <div>
+              <p className="mb-[-2px] font-bold">{data.user.name}</p>
+              <p className="text-xs text-gray-400">{data.user.email}</p>
+            </div>
+          </div>
+        ) : (
+          <>
+            <h2 className="font-bold">Olá, faça seu Login!</h2>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button size="icon">
+                  <LogInIcon />
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="w-[90%] rounded-xl">
+                <DialogHeader>
+                  <DialogTitle>Faça Login na Plataforma</DialogTitle>
+                  <DialogDescription>
+                    Conecte-se usando sua conta Google
+                  </DialogDescription>
+                </DialogHeader>
+                <Button
+                  variant="outline"
+                  className="gap-1 font-bold"
+                  onClick={handleLoginWithGoogleClick}
+                >
+                  <Image
+                    src="/google.svg"
+                    alt="Google Icone"
+                    width={18}
+                    height={18}
+                  />
+                  Google
+                </Button>
+              </DialogContent>
+            </Dialog>
+          </>
+        )}
       </div>
       <div className="flex flex-col gap-2 border-b border-solid py-5">
         <SheetClose asChild>
@@ -96,7 +111,11 @@ const SidebarSheet = () => {
         ))}
       </div>
       <div className="flex flex-col gap-2 border-b border-solid py-5">
-        <Button variant="ghost" className="justify-start">
+        <Button
+          variant="ghost"
+          className="justify-start"
+          onClick={handleLogoutClick}
+        >
           <LogOutIcon size={18} />
           Sair da Conta
         </Button>
