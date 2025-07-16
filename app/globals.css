@@ -72,6 +72,6 @@
     @apply h-full;
   }
   body {
-    @apply font-nunito h-full bg-background text-foreground;
+    @apply h-full bg-background font-nunito text-foreground;
   }
 }
