@@ -16,9 +16,6 @@ interface BarbershopPageProps {
 }
 
 const BarbershopPage = async ({ params }: BarbershopPageProps) => {
-  //chamar o banco de dados para obter os detalhes das
-  // barbearias
-
   const barbershop = await db.barbershop.findUnique({
     where: {
       id: params.id,
@@ -31,6 +28,12 @@ const BarbershopPage = async ({ params }: BarbershopPageProps) => {
   if (!barbershop) {
     return notFound()
   }
+
+  // ✅ Serializa os services (price: Decimal -> number)
+  const serializedServices = barbershop.services.map((service) => ({
+    ...service,
+    price: service.price.toNumber(),
+  }))
 
   return (
     <div>
@@ -67,6 +70,7 @@ const BarbershopPage = async ({ params }: BarbershopPageProps) => {
           <SidebarSheet />
         </Sheet>
       </div>
+
       {/* TEXTO ABAIXO DA IMAGEM */}
       <div className="border-b border-solid p-5">
         <h1 className="mb-3 text-xl font-bold">{barbershop?.name}</h1>
@@ -80,26 +84,33 @@ const BarbershopPage = async ({ params }: BarbershopPageProps) => {
           <p className="text-sm">5,0 (806 Avaliações).</p>
         </div>
       </div>
-      {/* DESCRIÇÃO DA BARBEARIA*/}
+
+      {/* DESCRIÇÃO */}
       <div className="space-y-3 border-b border-solid p-5">
         <h2 className="text-xs font-bold uppercase text-gray-400">Sobre Nós</h2>
         <p className="text-justify text-sm font-light">
           {barbershop?.description}
         </p>
       </div>
-      {/* SERVIÇOS DA BARBEARIA */}
+
+      {/* SERVIÇOS */}
       <div className="space-y-3 border-b border-solid p-5">
         <h2 className="text-xs font-bold uppercase text-gray-400">Serviços</h2>
         <div className="space-y-3">
-          {barbershop.services.map((service) => (
-            <ServiceItem key={service.id} service={service} />
+          {serializedServices.map((service) => (
+            <ServiceItem
+              key={service.id}
+              barbershop={{ name: barbershop.name }} // ✅ agora é um objeto serializável
+              service={service}
+            />
           ))}
         </div>
       </div>
-      {/* CONTATO DA BARBEARIA */}
+
+      {/* CONTATOS */}
       <div className="space-y-3 p-5">
-        {barbershop.phones.map((phone) => (
-          <PhoneItem key={phone} phone={phone} />
+        {barbershop.phones.map((phone, index) => (
+          <PhoneItem key={`${phone}-${index}`} phone={phone} />
         ))}
       </div>
     </div>
