@@ -28,8 +28,12 @@ const SidebarSheet = () => {
                 height={50}
                 width={50}
                 className="rounded-full"
+                onError={(e) => {
+                  e.currentTarget.src = "/default-avatar.png" // precisa estar em public/
+                }}
               />
             </Avatar>
+
             <div>
               <p className="mb-[-2px] font-bold">{data.user.name}</p>
               <p className="text-xs text-gray-400">{data.user.email}</p>
