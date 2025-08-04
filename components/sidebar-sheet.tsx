@@ -17,7 +17,7 @@ const SidebarSheet = () => {
   return (
     <SheetContent className="overflow-y-auto">
       <SheetHeader>
-        <SheetTitle className="text-left">Menu</SheetTitle>
+        <SheetTitle className="mt-3 text-left">Menu</SheetTitle>
       </SheetHeader>
       <div className="flex items-center justify-between gap-3 border-b border-solid py-5">
         {data?.user ? (
