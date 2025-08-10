@@ -13,8 +13,8 @@ import {
 } from "./ui/sheet"
 import { Calendar } from "./ui/calendar"
 import { ptBR } from "date-fns/locale"
-import { useEffect, useState } from "react"
-import { format, set } from "date-fns"
+import { useEffect, useMemo, useState } from "react"
+import { format, isPast, isToday, set } from "date-fns"
 import { createBooking } from "@/app/_actions/create-booking"
 import { useSession } from "next-auth/react"
 import { toast } from "sonner"
@@ -54,10 +54,22 @@ const TIME_LIST = [
   "18:00",
 ]
 
-const getTimeList = (bookings: Booking[]) => {
+interface GetTimeListProps {
+  bookings: Booking[]
+  selectedDay: Date
+}
+
+const getTimeList = ({ bookings, selectedDay }: GetTimeListProps) => {
   return TIME_LIST.filter((time) => {
     const hour = Number(time.split(":")[0])
     const minutes = Number(time.split(":")[1])
+
+    const timeIsOnThePast = isPast(set(new Date(), { hours: hour, minutes }))
+
+    if (timeIsOnThePast && isToday(selectedDay)) {
+      return false
+    }
+
     const isBooked = bookings.some(
       (booking) =>
         booking.date.getHours() === hour &&
@@ -92,7 +104,7 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
       setTimeout(() => {
         setDayBookings(bookings)
         setIsLoadingTimes(false)
-      }, 400)
+      }, 100)
     }
 
     fetch()
@@ -147,11 +159,18 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
         })
         setDayBookings(bookings)
       }, 300)
-    } catch (error) {
-      console.error(error)
+    } catch {
       toast.error("Erro ao criar reserva!")
     }
   }
+
+  const timeList = useMemo(() => {
+    if (!selectedDay) return []
+    return getTimeList({
+      bookings: dayBookings,
+      selectedDay,
+    })
+  }, [dayBookings, selectedDay])
 
   return (
     <>
@@ -217,14 +236,19 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
 
                   {selectedDay && (
                     <div className="flex gap-3 overflow-x-auto border-b border-solid p-5 [&::-webkit-scrollbar]:hidden">
-                      {isLoadingTimes
-                        ? Array.from({ length: 6 }).map((_, index) => (
+                      {timeList.length > 0 ? (
+                        isLoadingTimes ? (
+                          Array.from({ length: 6 }).map((_, index) => (
                             <Skeleton
                               key={index}
                               className="h-10 w-20 rounded-full"
                             />
                           ))
-                        : getTimeList(dayBookings).map((time) => (
+                        ) : (
+                          getTimeList({
+                            bookings: dayBookings,
+                            selectedDay,
+                          }).map((time) => (
                             <Button
                               key={time}
                               variant={
@@ -235,7 +259,13 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
                             >
                               {time}
                             </Button>
-                          ))}
+                          ))
+                        )
+                      ) : (
+                        <p className="text-xs">
+                          Nenhum horário disponível para este dia.
+                        </p>
+                      )}
                     </div>
                   )}
 
