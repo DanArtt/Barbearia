@@ -1,3 +1,4 @@
+"use client"
 import { Prisma } from "@/app/generated/prisma/client"
 import { Avatar, AvatarImage } from "./ui/avatar"
 import { Badge } from "./ui/badge"
@@ -6,13 +7,31 @@ import { format, isFuture } from "date-fns"
 import { ptBR } from "date-fns/locale"
 import {
   Sheet,
+  SheetClose,
   SheetContent,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "./ui/sheet"
 import Image from "next/image"
 import PhoneItem from "./phone-item"
+import { Button } from "./ui/button"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog"
+import { DialogClose } from "@radix-ui/react-dialog"
+import { toast } from "sonner"
+import { useState } from "react"
+import { cancelBooking } from "@/app/_actions/cancel-booking"
+import { Textarea } from "./ui/textarea"
+import { useRouter } from "next/navigation"
 
 interface BookingItemProps {
   booking: Prisma.BookingGetPayload<{
@@ -26,24 +45,54 @@ interface BookingItemProps {
   }>
 }
 
-// TODO: receber agendamento como prop
 const BookingItem = ({ booking }: BookingItemProps) => {
-  const isConfirmed = isFuture(booking.date)
+  const [isSheetOpen, setIsSheetOpen] = useState(false)
+  const router = useRouter()
+
+  const isConfirmed = isFuture(booking.date) && !booking.canceled
+  const [cancelReason, setCancelReason] = useState("") // ✅ motivo do cancelamento
+  const handleCancelBooking = async () => {
+    try {
+      await cancelBooking(booking.id, cancelReason)
+      setIsSheetOpen(false)
+      toast.success("Agendamento cancelado com sucesso!")
+      router.refresh() // 🔹 Atualiza a lista sem reload total
+    } catch (error) {
+      console.error("Erro ao cancelar agendamento:", error)
+      toast.error("Erro ao cancelar agendamento. Tente novamente.")
+    }
+  }
+
+  const handleSheetOpenChange = (isOpen: boolean) => {
+    setIsSheetOpen(isOpen)
+  }
+
   return (
-    <Sheet>
+    <Sheet open={isSheetOpen} onOpenChange={handleSheetOpenChange}>
       <SheetTrigger className="w-full">
-        {/* Agendamentos */}
         <Card className="min-w-[95%]">
           <CardContent className="flex justify-between p-0">
-            {/* Conteudo da Esquerda do Card */}
+            {/* Esquerda */}
             <div className="flex flex-col gap-2 px-5 py-5">
               <Badge
                 className="w-fit"
-                variant={isConfirmed ? "default" : "secondary"}
+                variant={
+                  booking.canceled
+                    ? "destructive"
+                    : isConfirmed
+                      ? "default"
+                      : "secondary"
+                }
               >
-                {isConfirmed ? "Confirmado" : "Finalizado"}
+                {booking.canceled
+                  ? "Cancelado"
+                  : isConfirmed
+                    ? "Confirmado"
+                    : "Finalizado"}
               </Badge>
-              <h3 className="text-lg font-semibold">{booking.service.name}</h3>
+              <h3 className="text-left text-lg font-semibold">
+                {booking.service.name}
+              </h3>
               <div className="item-center flex gap-2">
                 <Avatar className="h-6 w-6">
                   <AvatarImage
@@ -56,7 +105,8 @@ const BookingItem = ({ booking }: BookingItemProps) => {
                 </p>
               </div>
             </div>
-            {/* Conteudo da Direita do Card */}
+
+            {/* Direita */}
             <div className="flex flex-col items-center justify-center border-l-2 border-solid px-5">
               <p className="text-sm capitalize">
                 {format(booking.date, "MMMM", { locale: ptBR })}
@@ -71,6 +121,7 @@ const BookingItem = ({ booking }: BookingItemProps) => {
           </CardContent>
         </Card>
       </SheetTrigger>
+
       <SheetContent className="w-[90%]">
         <SheetHeader>
           <SheetTitle className="mb-6 mt-3 text-left">
@@ -78,6 +129,8 @@ const BookingItem = ({ booking }: BookingItemProps) => {
           </SheetTitle>
           <div className="border-b border-solid"></div>
         </SheetHeader>
+
+        {/* Mapa */}
         <div className="relative mt-6 flex h-[180px] w-full items-end">
           <Image
             src="/map.png"
@@ -85,8 +138,7 @@ const BookingItem = ({ booking }: BookingItemProps) => {
             fill
             className="rounded-xl object-cover"
           />
-
-          <Card className="rounded-lx z-10 mx-5 mb-3 w-full">
+          <Card className="z-10 mx-5 mb-3 w-full rounded-xl">
             <CardContent className="flex items-center gap-3 px-5 py-3">
               <Avatar>
                 <AvatarImage src={booking.service.barbershop.imageUrl} />
@@ -99,12 +151,23 @@ const BookingItem = ({ booking }: BookingItemProps) => {
           </Card>
         </div>
 
+        {/* Detalhes */}
         <div className="mt-6">
           <Badge
             className="w-fit"
-            variant={isConfirmed ? "default" : "secondary"}
+            variant={
+              booking.canceled
+                ? "destructive"
+                : isConfirmed
+                  ? "default"
+                  : "secondary"
+            }
           >
-            {isConfirmed ? "Confirmado" : "Finalizado"}
+            {booking.canceled
+              ? "Cancelado"
+              : isConfirmed
+                ? "Confirmado"
+                : "Finalizado"}
           </Badge>
 
           <Card className="mb-6 mt-3">
@@ -142,11 +205,128 @@ const BookingItem = ({ booking }: BookingItemProps) => {
             </CardContent>
           </Card>
         </div>
+
+        {/* Telefones */}
         <div className="space-y-3">
           {booking.service.barbershop.phones.map((phone, index) => (
             <PhoneItem key={index} phone={phone} />
           ))}
         </div>
+
+        {booking.canceled && booking.cancelReason && (
+          <Card className="mt-6 border border-red-900">
+            <CardContent className="space-y-3 p-3">
+              <h3 className="mb-1 text-sm font-bold">
+                Motivo do Cancelamento:
+              </h3>
+              <p className="text-sm text-gray-400">{booking.cancelReason}</p>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Botões */}
+        <SheetFooter className="mt-6">
+          <div className="flex items-center gap-3">
+            <SheetClose asChild>
+              <Button variant="outline" className="w-full rounded-xl">
+                Voltar
+              </Button>
+            </SheetClose>
+
+            {isConfirmed && !booking.canceled && (
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="destructive" className="w-full rounded-xl">
+                    Cancelar Reserva
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="w-[90%] rounded-xl">
+                  <DialogHeader>
+                    <DialogTitle>Cancelar Agendamento ?</DialogTitle>
+                    <DialogDescription>
+                      Ao cancelar, você perderá sua reserva e não poderá
+                      recuperá-la. Tem certeza que deseja continuar?
+                    </DialogDescription>
+                    <div className="mt-4">
+                      <label className="mb-2 block text-sm font-medium text-gray-700">
+                        Motivo do cancelamento:
+                      </label>
+                      <Textarea
+                        placeholder="Digite o motivo..."
+                        className="w-full"
+                        value={cancelReason}
+                        onChange={(e) => setCancelReason(e.target.value)}
+                      />
+                    </div>
+                  </DialogHeader>
+                  <DialogFooter className="flex flex-row gap-3">
+                    <DialogClose asChild>
+                      <Button variant="outline" className="w-full rounded-xl">
+                        Voltar
+                      </Button>
+                    </DialogClose>
+                    <DialogClose asChild>
+                      <Button
+                        variant="destructive"
+                        className="w-full rounded-xl"
+                        onClick={handleCancelBooking}
+                      >
+                        Confirmar
+                      </Button>
+                    </DialogClose>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            )}
+            {booking.canceled && (
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="destructive" className="w-full rounded-xl">
+                    Excluir Agendamento
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="w-[90%] rounded-xl">
+                  <DialogHeader>
+                    <DialogTitle>Excluir Agendamento?</DialogTitle>
+                    <DialogDescription>
+                      Essa ação é irreversível e removerá permanentemente este
+                      agendamento do histórico.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <DialogFooter className="flex flex-row gap-3">
+                    <DialogClose asChild>
+                      <Button variant="outline" className="w-full rounded-xl">
+                        Voltar
+                      </Button>
+                    </DialogClose>
+                    <DialogClose asChild>
+                      <Button
+                        variant="destructive"
+                        className="w-full rounded-xl"
+                        onClick={async () => {
+                          try {
+                            const { deleteBooking } = await import(
+                              "@/app/_actions/delete-booking"
+                            )
+                            await deleteBooking(booking.id)
+                            toast.success("Agendamento excluído com sucesso!")
+                            setIsSheetOpen(false)
+                            router.refresh() // ou router.refresh() se preferir
+                          } catch (error) {
+                            console.error("Erro ao excluir:", error)
+                            toast.error("Erro ao excluir agendamento")
+                          }
+                        }}
+                      >
+                        Confirmar
+                      </Button>
+                    </DialogClose>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            )}
+          </div>
+        </SheetFooter>
       </SheetContent>
     </Sheet>
   )

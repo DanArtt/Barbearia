@@ -1,3 +1,4 @@
+// app/page.tsx
 import Header from "@/components/header"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
@@ -10,6 +11,30 @@ import Link from "next/link"
 import { authOptions } from "./_lib/auth"
 import { getServerSession } from "next-auth"
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
+function normalizeBooking(booking: any) {
+  return {
+    ...booking,
+
+    date:
+      booking.date instanceof Date
+        ? booking.date.toISOString()
+        : String(booking.date),
+    service: {
+      ...booking.service,
+
+      price:
+        booking.service?.price?.toString &&
+        typeof booking.service.price.toString === "function"
+          ? booking.service.price.toString()
+          : booking.service?.price,
+      barbershop: {
+        ...booking.service?.barbershop,
+      },
+    },
+  }
+}
+
 const Home = async () => {
   const session = await getServerSession(authOptions)
   const barbershops = await db.barbershop.findMany({})
@@ -23,6 +48,7 @@ const Home = async () => {
     ? await db.booking.findMany({
         where: {
           userId: (session?.user as any).id,
+          canceled: false,
           date: {
             gte: new Date(),
           },
@@ -39,6 +65,10 @@ const Home = async () => {
         },
       })
     : []
+
+  // Normaliza para evitar passar Decimal/date não serializáveis para Client Components
+  const safeConfirmedBookings = (confirmedBookings || []).map(normalizeBooking)
+
   return (
     <div>
       {/* Header */}
@@ -88,8 +118,10 @@ const Home = async () => {
         </h2>
         {/* Agendamento */}
         <div className="flex gap-3 overflow-x-auto [&::-webkit-scrollbar]:hidden">
-          {confirmedBookings.map((booking) => (
-            <BookingItem key={booking.id} booking={booking} />
+          {safeConfirmedBookings.map((booking) => (
+            <div key={booking.id} className="w-full flex-shrink-0">
+              <BookingItem booking={booking} />
+            </div>
           ))}
         </div>
         {/* Visualização das Barbearias Recomendadas */}
