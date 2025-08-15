@@ -3,13 +3,17 @@ import Header from "@/components/header"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import { db } from "./_lib/prisma"
-import BarbershopItem from "@/components/barbershop-item"
 import { quickSearchOptions } from "./_constants/search"
 import BookingItem from "@/components/booking-item"
 import Search from "@/components/search"
 import Link from "next/link"
 import { authOptions } from "./_lib/auth"
 import { getServerSession } from "next-auth"
+import { format } from "date-fns"
+import { ptBR } from "date-fns/locale"
+import PopularList from "@/components/popular-list"
+import RecommendedList from "@/components/recommended-list"
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 function normalizeBooking(booking: any) {
@@ -70,13 +74,22 @@ const Home = async () => {
   const safeConfirmedBookings = (confirmedBookings || []).map(normalizeBooking)
 
   return (
-    <div>
+    <div className="bg-color-back dark:bg-dark-color-back">
       {/* Header */}
       <Header />
       {/* Texto do Usuário */}
       <div className="p-5">
-        <h2 className="text-xl font-bold">Olá, Daniel!</h2>
-        <p>Domingo, 06 de Julho</p>
+        <h2 className="text-xl font-bold text-color-text dark:text-dark-color-text-title">
+          Olá, {session?.user ? session.user.name : "Bem-Vindo"}!
+        </h2>
+        <p>
+          <span className="capitalize text-color-text dark:text-dark-color-text-title">
+            {format(new Date(), "EEEE, dd ", { locale: ptBR })}
+          </span>
+          <span className="text-color-text dark:text-dark-color-text-title">
+            {format(new Date(), "'de' MMMM", { locale: ptBR })}
+          </span>
+        </p>
 
         {/* Input de busca + botão */}
         <div className="mt-6">
@@ -86,8 +99,7 @@ const Home = async () => {
         <div className="mt-6 flex gap-3 overflow-x-auto [&::-webkit-scrollbar]:hidden">
           {quickSearchOptions.map((option) => (
             <Button
-              className="gap-2"
-              variant="secondary"
+              className="gap-2 bg-color-button hover:bg-hover-color-button active:bg-active-color-button dark:bg-dark-color-button dark:hover:bg-dark-hover-color-button dark:active:bg-dark-active-color-button"
               key={option.title}
               asChild
             >
@@ -113,7 +125,7 @@ const Home = async () => {
             className="rounded-xl object-cover"
           />
         </div>
-        <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
+        <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-color-text dark:text-dark-color-text-subtitle">
           Agendamentos
         </h2>
         {/* Agendamento */}
@@ -125,23 +137,15 @@ const Home = async () => {
           ))}
         </div>
         {/* Visualização das Barbearias Recomendadas */}
-        <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
+        <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-color-text dark:text-dark-color-text-subtitle lg:mx-10">
           Recomendadas
         </h2>
-        <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden">
-          {barbershops.map((barbershop) => (
-            <BarbershopItem key={barbershop.id} barbershop={barbershop} />
-          ))}
-        </div>
+        <RecommendedList barbershops={barbershops} />
         {/* Visualização das Barbearias Populares */}
-        <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
+        <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-color-text dark:text-dark-color-text-subtitle lg:mx-10">
           Populares
         </h2>
-        <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden">
-          {polularBarbershops.map((barbershop) => (
-            <BarbershopItem key={barbershop.id} barbershop={barbershop} />
-          ))}
-        </div>
+        <PopularList barbershops={polularBarbershops} />
       </div>
       {/* Footer */}
     </div>

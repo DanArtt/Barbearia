@@ -49,7 +49,7 @@ const BarbershopPage = async ({ params }: BarbershopPageProps) => {
         <Button
           size="icon"
           variant="secondary"
-          className="absolute left-4 top-4"
+          className="absolute left-4 top-4 bg-color-button hover:bg-hover-color-button active:bg-active-color-button dark:bg-dark-color-button dark:hover:bg-dark-hover-color-button dark:active:bg-dark-active-color-button"
           asChild
         >
           <Link href="/">
@@ -62,7 +62,7 @@ const BarbershopPage = async ({ params }: BarbershopPageProps) => {
             <Button
               size="icon"
               variant="outline"
-              className="absolute right-4 top-4"
+              className="absolute right-4 top-4 border-none bg-color-button hover:bg-hover-color-button active:bg-active-color-button dark:bg-dark-color-button dark:hover:bg-dark-hover-color-button dark:active:bg-dark-active-color-button"
             >
               <MenuIcon />
             </Button>
@@ -73,29 +73,39 @@ const BarbershopPage = async ({ params }: BarbershopPageProps) => {
 
       {/* TEXTO ABAIXO DA IMAGEM */}
       <div className="border-b border-solid p-5">
-        <h1 className="mb-3 text-xl font-bold">{barbershop?.name}</h1>
+        <h1 className="mb-3 text-xl font-bold text-color-text dark:text-dark-color-text-title">
+          {barbershop?.name}
+        </h1>
 
         <div className="mb-2 flex items-center gap-2">
-          <MapPinIcon className="fill-primary text-secondary" size={18} />
-          <p className="text-sm">{barbershop?.address}</p>
+          <MapPinIcon className="fill-color-text" size={18} />
+          <p className="text-sm text-gray-700 dark:text-dark-color-text-subtitle">
+            {barbershop?.address}
+          </p>
         </div>
         <div className="flex items-center gap-2">
-          <StarIcon className="fill-primary text-primary" size={18} />
-          <p className="text-sm">5,0 (806 Avaliações).</p>
+          <StarIcon className="fill-color-star text-color-star" size={18} />
+          <p className="text-sm text-gray-700 dark:text-dark-color-text-subtitle">
+            5,0 (806 Avaliações).
+          </p>
         </div>
       </div>
 
       {/* DESCRIÇÃO */}
       <div className="space-y-3 border-b border-solid p-5">
-        <h2 className="text-xs font-bold uppercase text-gray-400">Sobre Nós</h2>
-        <p className="text-justify text-sm font-light">
+        <h2 className="text-xs font-bold uppercase text-gray-700 dark:text-dark-color-text-title">
+          Sobre Nós
+        </h2>
+        <p className="text-justify text-sm font-light text-color-text dark:text-dark-color-text-subtitle">
           {barbershop?.description}
         </p>
       </div>
 
       {/* SERVIÇOS */}
       <div className="space-y-3 border-b border-solid p-5">
-        <h2 className="text-xs font-bold uppercase text-gray-400">Serviços</h2>
+        <h2 className="text-xs font-bold uppercase text-gray-700 dark:text-dark-color-text-title">
+          Serviços
+        </h2>
         <div className="space-y-3">
           {serializedServices.map((service) => (
             <ServiceItem

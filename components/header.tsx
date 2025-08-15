@@ -7,7 +7,7 @@ import SidebarSheet from "./sidebar-sheet"
 import Link from "next/link"
 const Header = () => {
   return (
-    <Card>
+    <Card className="rounded-none border-none bg-color-navbar dark:bg-dark-color-navbar">
       <CardContent className="flex flex-row items-center justify-between p-5">
         <Link href="/">
           <Image
@@ -20,7 +20,11 @@ const Header = () => {
 
         <Sheet>
           <SheetTrigger asChild>
-            <Button size="icon" variant="outline">
+            <Button
+              className="bg-color-button hover:bg-hover-color-button active:bg-active-color-button dark:bg-dark-color-button dark:hover:bg-dark-hover-color-button dark:active:bg-dark-active-color-button"
+              size="icon"
+              variant="outline"
+            >
               <MenuIcon />
             </Button>
           </SheetTrigger>

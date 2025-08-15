@@ -15,7 +15,7 @@ const SignInDialog = () => {
       </DialogHeader>
       <Button
         variant="outline"
-        className="gap-1 font-bold"
+        className="flex items-center justify-center gap-1 bg-color-button font-bold hover:bg-hover-color-button active:bg-active-color-button dark:bg-dark-color-button dark:hover:bg-dark-hover-color-button dark:active:bg-dark-active-color-button"
         onClick={handleLoginWithGoogleClick}
       >
         <Image src="/google.svg" alt="Google Icone" width={18} height={18} />

@@ -106,11 +106,13 @@ const Bookings = async () => {
   return (
     <>
       <Header />
-      <div className="space-y-3 p-5">
-        <h1 className="text-xl font-bold">Agendamentos</h1>
+      <div className="space-y-3 bg-color-back p-5 dark:bg-dark-color-back">
+        <h1 className="text-xl font-bold text-color-text dark:text-dark-color-text-title">
+          Agendamentos
+        </h1>
 
         {/* Confirmados */}
-        <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
+        <h2 className="text-gray- mb-3 mt-6 text-xs font-bold uppercase text-gray-700 dark:text-dark-color-text-subtitle">
           Confirmados
         </h2>
         {safeConfirmed.length > 0 ? (
@@ -118,13 +120,13 @@ const Bookings = async () => {
             <BookingItem key={booking.id} booking={booking} />
           ))
         ) : (
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-700 dark:text-dark-color-text-subtitle">
             Nenhum agendamento confirmado.
           </p>
         )}
 
         {/* Finalizados */}
-        <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
+        <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-700 dark:text-dark-color-text-subtitle">
           Finalizados
         </h2>
         {safeConcluded.length > 0 ? (
@@ -132,14 +134,14 @@ const Bookings = async () => {
             <BookingItem key={booking.id} booking={booking} />
           ))
         ) : (
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-700 dark:text-dark-color-text-subtitle">
             Nenhum agendamento finalizado.
           </p>
         )}
 
         {/* Cancelados */}
         <div className="mb-3 mt-6 flex items-center justify-between">
-          <h2 className="text-xs font-bold uppercase text-gray-400">
+          <h2 className="text-xs font-bold uppercase text-gray-700 dark:text-dark-color-text-subtitle">
             Cancelados
           </h2>
           {safeCanceled.length > 0 && <DeleteCanceledButton userId={userId} />}
@@ -150,7 +152,9 @@ const Bookings = async () => {
             <BookingItem key={booking.id} booking={booking} />
           ))
         ) : (
-          <p className="text-sm text-gray-500">Nenhum agendamento cancelado.</p>
+          <p className="text-sm text-gray-700 dark:text-dark-color-text-subtitle">
+            Nenhum agendamento cancelado.
+          </p>
         )}
       </div>
     </>

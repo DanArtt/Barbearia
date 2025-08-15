@@ -174,8 +174,8 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
 
   return (
     <>
-      <Card>
-        <CardContent className="flex items-center gap-3 p-3">
+      <Card className="border-none">
+        <CardContent className="flex items-center gap-3 rounded-lg bg-color-card p-3 dark:bg-dark-color-card">
           {/* IMAGE */}
           <div className="relative max-h-[110px] min-h-[110px] min-w-[110px] max-w-[110px]">
             <Image
@@ -188,7 +188,9 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
           {/* CONTEÚDO */}
           <div className="space-y-2">
             <h3 className="text-sm font-semibold">{service.name}</h3>
-            <p className="text-sm text-gray-400">{service.description}</p>
+            <p className="text-sm text-gray-400 dark:text-dark-color-text-subtitle">
+              {service.description}
+            </p>
             <div className="flex items-center justify-between">
               <p className="text-sm font-bold text-primary">
                 {Intl.NumberFormat("pt-BR", {
@@ -201,25 +203,29 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
                 onOpenChange={handleBookingSheetOpenChange}
               >
                 <Button
+                  className="bg-color-button hover:bg-hover-color-button active:bg-active-color-button dark:bg-dark-color-button dark:hover:bg-dark-hover-color-button dark:active:bg-dark-active-color-button"
                   variant="secondary"
                   size="sm"
                   onClick={handleBookingClick}
                 >
                   Reservar
                 </Button>
-                <SheetContent className="px-0">
+                <SheetContent className="bg-color-back px-0 dark:bg-dark-color-back">
                   <SheetHeader>
-                    <SheetTitle>Fazer Reserva</SheetTitle>
+                    <SheetTitle className="-mb-4 mt-3 overflow-y-auto pl-4 text-left text-color-text dark:text-dark-color-text-title">
+                      Fazer Reserva
+                    </SheetTitle>
+                    <div className="mx-5 border-b border-solid py-5 dark:border-dark-color-button"></div>
                   </SheetHeader>
 
-                  <div className="border-b border-solid py-5">
+                  <div className="py-5 dark:border-dark-color-button">
                     <Calendar
                       mode="single"
                       locale={ptBR}
                       selected={selectedDay}
                       onSelect={handleDateSelect}
                       disabled={{ before: new Date() }}
-                      className="w-full"
+                      className="w-full bg-color-back text-color-text dark:bg-dark-color-back dark:text-dark-color-text-title"
                       styles={{
                         head_cell: {
                           width: "100%",
@@ -233,9 +239,10 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
                       }}
                     />
                   </div>
+                  <div className="mx-5 border-t border-solid dark:border-dark-color-button"></div>
 
                   {selectedDay && (
-                    <div className="flex gap-3 overflow-x-auto border-b border-solid p-5 [&::-webkit-scrollbar]:hidden">
+                    <div className="mx-5 flex gap-3 overflow-y-auto border-b border-solid p-5 text-color-text dark:border-dark-color-button dark:text-dark-color-text-title [&::-webkit-scrollbar]:hidden">
                       {timeList.length > 0 ? (
                         isLoadingTimes ? (
                           Array.from({ length: 6 }).map((_, index) => (
@@ -262,7 +269,7 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
                           ))
                         )
                       ) : (
-                        <p className="text-xs">
+                        <p className="text-sm">
                           Nenhum horário disponível para este dia.
                         </p>
                       )}
@@ -272,7 +279,7 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
                   {selectedTime && selectedDay && (
                     <div className="p-5">
                       <Card>
-                        <CardContent className="space-y-3 p-3">
+                        <CardContent className="space-y-3 bg-color-card p-3 dark:bg-dark-color-card">
                           <div className="flex items-center justify-between">
                             <h2 className="font-bold">{service.name}</h2>
                             <p className="text-sm font-bold">
@@ -284,7 +291,9 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
                           </div>
 
                           <div className="flex items-center justify-between">
-                            <h2 className="text-sm text-gray-400">Data</h2>
+                            <h2 className="text-sm text-gray-400 dark:text-dark-color-text-subtitle">
+                              Data
+                            </h2>
                             <p className="text-sm">
                               {format(selectedDay, "d 'de' MMMM", {
                                 locale: ptBR,
@@ -293,12 +302,16 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
                           </div>
 
                           <div className="flex items-center justify-between">
-                            <h2 className="text-sm text-gray-400">Horário</h2>
+                            <h2 className="text-sm text-gray-400 dark:text-dark-color-text-subtitle">
+                              Horário
+                            </h2>
                             <p className="text-sm">{selectedTime}</p>
                           </div>
 
                           <div className="flex items-center justify-between">
-                            <h2 className="text-sm text-gray-400">Barbearia</h2>
+                            <h2 className="text-sm text-gray-400 dark:text-dark-color-text-subtitle">
+                              Barbearia
+                            </h2>
                             <p className="text-sm">{barbershop.name}</p>
                           </div>
                         </CardContent>

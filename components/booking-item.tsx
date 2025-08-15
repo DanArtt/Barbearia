@@ -71,7 +71,7 @@ const BookingItem = ({ booking }: BookingItemProps) => {
     <Sheet open={isSheetOpen} onOpenChange={handleSheetOpenChange}>
       <SheetTrigger className="w-full">
         <Card className="min-w-[95%]">
-          <CardContent className="flex justify-between p-0">
+          <CardContent className="flex justify-between border-none bg-color-card p-0 dark:bg-dark-color-card">
             {/* Esquerda */}
             <div className="flex flex-col gap-2 px-5 py-5">
               <Badge
@@ -122,12 +122,12 @@ const BookingItem = ({ booking }: BookingItemProps) => {
         </Card>
       </SheetTrigger>
 
-      <SheetContent className="w-[90%]">
+      <SheetContent className="w-[90%] bg-color-back dark:bg-dark-color-back">
         <SheetHeader>
-          <SheetTitle className="mb-6 mt-3 text-left">
+          <SheetTitle className="-mb-4 mt-3 text-left text-color-text dark:text-dark-color-text-title">
             Informações da Reserva
           </SheetTitle>
-          <div className="border-b border-solid"></div>
+          <div className="border-b border-solid py-5 dark:border-dark-color-card"></div>
         </SheetHeader>
 
         {/* Mapa */}
@@ -138,14 +138,16 @@ const BookingItem = ({ booking }: BookingItemProps) => {
             fill
             className="rounded-xl object-cover"
           />
-          <Card className="z-10 mx-5 mb-3 w-full rounded-xl">
+          <Card className="z-10 mx-5 mb-3 w-full rounded-xl bg-color-card dark:bg-dark-color-card">
             <CardContent className="flex items-center gap-3 px-5 py-3">
               <Avatar>
                 <AvatarImage src={booking.service.barbershop.imageUrl} />
               </Avatar>
               <div>
                 <h3 className="font-bold">{booking.service.barbershop.name}</h3>
-                <p className="text-xs">{booking.service.barbershop.address}</p>
+                <p className="text-xs dark:text-dark-color-text-subtitle">
+                  {booking.service.barbershop.address}
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -170,7 +172,7 @@ const BookingItem = ({ booking }: BookingItemProps) => {
                 : "Finalizado"}
           </Badge>
 
-          <Card className="mb-6 mt-3">
+          <Card className="mb-6 mt-3 bg-color-card dark:bg-dark-color-card">
             <CardContent className="space-y-3 p-3">
               <div className="flex items-center justify-between">
                 <h2 className="font-bold">{booking.service.name}</h2>
@@ -183,7 +185,9 @@ const BookingItem = ({ booking }: BookingItemProps) => {
               </div>
 
               <div className="flex items-center justify-between">
-                <h2 className="text-sm text-gray-400">Data</h2>
+                <h2 className="text-sm text-gray-400 dark:text-dark-color-text-subtitle">
+                  Data
+                </h2>
                 <p className="text-sm">
                   {format(booking.date, "d 'de' MMMM", {
                     locale: ptBR,
@@ -192,14 +196,18 @@ const BookingItem = ({ booking }: BookingItemProps) => {
               </div>
 
               <div className="flex items-center justify-between">
-                <h2 className="text-sm text-gray-400">Horário</h2>
+                <h2 className="text-sm text-gray-400 dark:text-dark-color-text-subtitle">
+                  Horário
+                </h2>
                 <p className="text-sm">
                   {format(booking.date, "HH:mm", { locale: ptBR })}
                 </p>
               </div>
 
               <div className="flex items-center justify-between">
-                <h2 className="text-sm text-gray-400">Barbearia</h2>
+                <h2 className="text-sm text-gray-400 dark:text-dark-color-text-subtitle">
+                  Barbearia
+                </h2>
                 <p className="text-sm">{booking.service.barbershop.name}</p>
               </div>
             </CardContent>
@@ -214,12 +222,14 @@ const BookingItem = ({ booking }: BookingItemProps) => {
         </div>
 
         {booking.canceled && booking.cancelReason && (
-          <Card className="mt-6 border border-red-900">
+          <Card className="mt-6 border border-color-canceled bg-color-back dark:bg-dark-color-back">
             <CardContent className="space-y-3 p-3">
-              <h3 className="mb-1 text-sm font-bold">
+              <h3 className="mb-1 text-sm font-bold text-color-text dark:text-dark-color-text-title">
                 Motivo do Cancelamento:
               </h3>
-              <p className="text-sm text-gray-400">{booking.cancelReason}</p>
+              <p className="text-sm text-gray-700 dark:text-dark-color-text-subtitle">
+                {booking.cancelReason}
+              </p>
             </CardContent>
           </Card>
         )}
@@ -228,7 +238,10 @@ const BookingItem = ({ booking }: BookingItemProps) => {
         <SheetFooter className="mt-6">
           <div className="flex items-center gap-3">
             <SheetClose asChild>
-              <Button variant="outline" className="w-full rounded-xl">
+              <Button
+                variant="outline"
+                className="w-full rounded-xl bg-color-button hover:bg-hover-color-button active:bg-active-color-button dark:bg-dark-color-button dark:hover:bg-dark-hover-color-button dark:active:bg-dark-active-color-button"
+              >
                 Voltar
               </Button>
             </SheetClose>
@@ -240,7 +253,7 @@ const BookingItem = ({ booking }: BookingItemProps) => {
                     Cancelar Reserva
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="w-[90%] rounded-xl">
+                <DialogContent className="w-[90%] rounded-xl bg-color-card dark:bg-dark-color-card">
                   <DialogHeader>
                     <DialogTitle>Cancelar Agendamento ?</DialogTitle>
                     <DialogDescription>
@@ -248,12 +261,12 @@ const BookingItem = ({ booking }: BookingItemProps) => {
                       recuperá-la. Tem certeza que deseja continuar?
                     </DialogDescription>
                     <div className="mt-4">
-                      <label className="mb-2 block text-sm font-medium text-gray-700">
+                      <label className="mb-2 block text-sm font-medium text-gray-500 dark:text-dark-color-text-subtitle">
                         Motivo do cancelamento:
                       </label>
                       <Textarea
                         placeholder="Digite o motivo..."
-                        className="w-full"
+                        className="w-full border-color-button bg-color-card dark:bg-dark-color-card"
                         value={cancelReason}
                         onChange={(e) => setCancelReason(e.target.value)}
                       />
@@ -261,7 +274,10 @@ const BookingItem = ({ booking }: BookingItemProps) => {
                   </DialogHeader>
                   <DialogFooter className="flex flex-row gap-3">
                     <DialogClose asChild>
-                      <Button variant="outline" className="w-full rounded-xl">
+                      <Button
+                        variant="outline"
+                        className="w-full rounded-xl bg-color-button hover:bg-hover-color-button active:bg-active-color-button dark:bg-dark-color-button dark:hover:bg-dark-hover-color-button dark:active:bg-dark-active-color-button"
+                      >
                         Voltar
                       </Button>
                     </DialogClose>

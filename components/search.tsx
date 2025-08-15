@@ -42,14 +42,17 @@ const Search = () => {
                 <Input
                   placeholder="Pesquisar..."
                   {...field}
-                  className="w-full"
+                  className="w-full border-0 bg-color-search-bar !placeholder-color-text focus-visible:outline-none dark:bg-dark-color-search-bar"
                 />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">
+        <Button
+          className="bg-color-button hover:bg-hover-color-button active:bg-active-color-button dark:bg-dark-color-button dark:hover:bg-dark-hover-color-button dark:active:bg-dark-active-color-button"
+          type="submit"
+        >
           <SearchIcon />
         </Button>
       </form>

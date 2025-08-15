@@ -10,14 +10,17 @@ import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog"
 import { signOut, useSession } from "next-auth/react"
 import { Avatar, AvatarImage } from "./ui/avatar"
 import SignInDialog from "./sign-in-dialog"
+import ThemeToggle from "./ThemeToggle"
 
 const SidebarSheet = () => {
   const { data } = useSession()
   const handleLogoutClick = () => signOut()
   return (
-    <SheetContent className="overflow-y-auto">
+    <SheetContent className="overflow-y-auto bg-color-back dark:bg-dark-color-back">
       <SheetHeader>
-        <SheetTitle className="mt-3 text-left">Menu</SheetTitle>
+        <SheetTitle className="mt-3 text-left text-color-text dark:text-dark-color-text-title">
+          Menu
+        </SheetTitle>
       </SheetHeader>
       <div className="flex items-center justify-between gap-3 border-b border-solid py-5">
         {data?.user ? (
@@ -35,20 +38,29 @@ const SidebarSheet = () => {
             </Avatar>
 
             <div>
-              <p className="mb-[-2px] font-bold">{data.user.name}</p>
-              <p className="text-xs text-gray-400">{data.user.email}</p>
+              <p className="mb-[-2px] font-bold text-color-text dark:text-dark-color-text-title">
+                {data.user.name}
+              </p>
+              <p className="text-xs text-gray-700 dark:text-dark-color-text-subtitle">
+                {data.user.email}
+              </p>
             </div>
           </div>
         ) : (
           <>
-            <h2 className="font-bold">Olá, faça seu Login!</h2>
+            <h2 className="font-bold text-color-text dark:text-dark-color-text-title">
+              Olá, faça seu Login!
+            </h2>
             <Dialog>
               <DialogTrigger asChild>
-                <Button size="icon">
+                <Button
+                  className="bg-color-button hover:bg-hover-color-button active:bg-active-color-button dark:bg-dark-color-button dark:hover:bg-dark-hover-color-button dark:active:bg-dark-active-color-button"
+                  size="icon"
+                >
                   <LogInIcon />
                 </Button>
               </DialogTrigger>
-              <DialogContent className="w-[90%] rounded-xl">
+              <DialogContent className="w-[90%] rounded-xl bg-color-card dark:bg-dark-color-card">
                 <SignInDialog />
               </DialogContent>
             </Dialog>
@@ -57,7 +69,10 @@ const SidebarSheet = () => {
       </div>
       <div className="flex flex-col gap-2 border-b border-solid py-5">
         <SheetClose asChild>
-          <Button className="flex items-center justify-start gap-2" asChild>
+          <Button
+            className="flex items-center justify-start gap-2 bg-color-button hover:bg-hover-color-button active:bg-active-color-button dark:bg-dark-color-button dark:hover:bg-dark-hover-color-button dark:active:bg-dark-active-color-button"
+            asChild
+          >
             <Link href="/">
               <HomeIcon size={18} />
               Ínicio
@@ -65,7 +80,7 @@ const SidebarSheet = () => {
           </Button>
         </SheetClose>
         <Button
-          className="flex items-center justify-start gap-2"
+          className="flex items-center justify-start gap-2 bg-color-button bg-none hover:bg-hover-color-button active:bg-active-color-button dark:bg-dark-color-button dark:hover:bg-dark-hover-color-button dark:active:bg-dark-active-color-button"
           variant="ghost"
           asChild
         >
@@ -75,10 +90,14 @@ const SidebarSheet = () => {
           </Link>
         </Button>
       </div>
-      <div className="flex flex-col gap-2 border-b border-solid py-5">
+      <div className="flex flex-col gap-2 py-5">
         {quickSearchOptions.map((option) => (
           <SheetClose key={option.title} asChild>
-            <Button className="justify-start gap-2" variant="ghost" asChild>
+            <Button
+              className="justify-start gap-2 bg-color-button hover:bg-hover-color-button active:bg-active-color-button dark:bg-dark-color-button dark:hover:bg-dark-hover-color-button dark:active:bg-dark-active-color-button"
+              variant="ghost"
+              asChild
+            >
               <Link href={`/barbershops?service=${option.title}`}>
                 <Image
                   src={option.imageURL}
@@ -93,10 +112,10 @@ const SidebarSheet = () => {
         ))}
       </div>
       {data?.user && (
-        <div className="flex flex-col gap-2 border-b border-solid py-5">
+        <div className="flex flex-col gap-2 border-t border-solid py-5">
           <Button
             variant="ghost"
-            className="justify-start"
+            className="justify-start bg-color-button hover:bg-hover-color-button active:bg-active-color-button dark:bg-dark-color-button dark:hover:bg-dark-hover-color-button dark:active:bg-dark-active-color-button"
             onClick={handleLogoutClick}
           >
             <LogOutIcon size={18} />
@@ -104,6 +123,7 @@ const SidebarSheet = () => {
           </Button>
         </div>
       )}
+      <ThemeToggle />
     </SheetContent>
   )
 }
