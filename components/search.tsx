@@ -32,7 +32,10 @@ const Search = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="flex gap-2">
+      <form
+        onSubmit={form.handleSubmit(handleSubmit)}
+        className="flex gap-2 lg:max-w-[400px]"
+      >
         <FormField
           control={form.control}
           name="title"
@@ -42,7 +45,7 @@ const Search = () => {
                 <Input
                   placeholder="Pesquisar..."
                   {...field}
-                  className="w-full border-0 bg-color-search-bar !placeholder-color-text focus-visible:outline-none dark:bg-dark-color-search-bar"
+                  className="w-full border-0 bg-color-search-bar !placeholder-color-text focus-visible:outline-none dark:bg-dark-color-search-bar lg:h-8"
                 />
               </FormControl>
               <FormMessage />
@@ -50,7 +53,7 @@ const Search = () => {
           )}
         />
         <Button
-          className="bg-color-button hover:bg-hover-color-button active:bg-active-color-button dark:bg-dark-color-button dark:hover:bg-dark-hover-color-button dark:active:bg-dark-active-color-button"
+          className="bg-color-button hover:bg-hover-color-button active:bg-active-color-button dark:bg-dark-color-button dark:hover:bg-dark-hover-color-button dark:active:bg-dark-active-color-button lg:h-8 lg:w-8"
           type="submit"
         >
           <SearchIcon />
